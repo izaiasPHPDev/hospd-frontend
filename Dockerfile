@@ -1,7 +1,14 @@
 FROM node:18-alpine AS build
+
 WORKDIR /app
+
+# Recebe o parâmetro de build e injeta no ambiente do Vite
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
+
 COPY package*.json ./
 RUN npm install
+
 COPY . .
 RUN npm run build
 
