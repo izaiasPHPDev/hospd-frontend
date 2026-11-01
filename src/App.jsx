@@ -6,7 +6,7 @@ import {
   Wrench, Printer, User, DollarSign, Search
 } from 'lucide-react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://sistemahospd-app.t4kpnp.easypanel.host/api';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
