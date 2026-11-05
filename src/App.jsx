@@ -8,6 +8,8 @@ import ModalReserva from './components/ModalReserva';
 import Login from './pages/Login';
 import QuartosPage from './pages/QuartosPage';
 import ReservasPage from './pages/ReservasPage';
+import ConsumoPage from './pages/ConsumoPage';
+import EquipePage from './pages/EquipePage';
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('hospd_token'));
@@ -35,7 +37,9 @@ export default function App() {
       setProdutos(resP.data);
       setUsuarios(resU.data);
     } catch (e) {
-      if (e.response?.status === 401) handleLogout();
+      if (e.response?.status === 401 || e.response?.status === 403) {
+        handleLogout();
+      }
     } finally {
       setLoading(false);
     }
@@ -74,8 +78,18 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-100 flex flex-col font-sans">
       <Header onRefresh={fetchDados} onLogout={handleLogout} loading={loading} />
+      
       <div className="flex flex-1">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} counts={{ reservas: reservas.length, produtos: produtos.length, usuarios: usuarios.length }} />
+        <Sidebar 
+          activeTab={activeTab} 
+          setActiveTab={setActiveTab} 
+          counts={{ 
+            reservas: reservas.length, 
+            produtos: produtos.length, 
+            usuarios: usuarios.length 
+          }} 
+        />
+        
         <main className="flex-1 p-8">
           {activeTab === 'quartos' && (
             <QuartosPage 
@@ -84,6 +98,7 @@ export default function App() {
               onAbrirModalReserva={() => setShowModalReserva(true)} 
             />
           )}
+
           {activeTab === 'reservas' && (
             <ReservasPage 
               reservas={reservas} 
@@ -91,6 +106,13 @@ export default function App() {
               onCheckout={handleCheckout} 
               onAbrirModalReserva={() => setShowModalReserva(true)} 
             />
+          )}
+
+          {activeTab === 'consumo' && <ConsumoPage produtos={produtos} />}
+
+          {/* Suporta tanto 'usuarios' como 'equipe' para evitar a tela em branco */}
+          {(activeTab === 'usuarios' || activeTab === 'equipe') && (
+            <EquipePage usuarios={usuarios} />
           )}
         </main>
       </div>
